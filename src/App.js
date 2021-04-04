@@ -4,7 +4,18 @@ import './App.css';
 const url='https://jsonplaceholder.typicode.com/'
 const points= ['posts','comments','albums','photos','users','todos'];
 
+const Displayuser = ()=>{
+const data = [...endPoint];
+return (
+  <div>
+  <h3> `User id : ${data.id}`</h3>
+  <p> `User name : ${data.name} ${data.username}`</p>
+  <p> `works in : ${data.company.name}`</p>
 
+  </div>
+
+)
+}
 
 
 
@@ -53,6 +64,7 @@ function App() {
         <br />
         <button type='submit'> Submit</button>
       </form>
+      <Displayuser />
     </div>
   );
 }
