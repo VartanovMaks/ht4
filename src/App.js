@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import './App.css';
 
 const url='https://jsonplaceholder.typicode.com/'
@@ -30,7 +30,7 @@ const LIComponent = ({objData}) =>{
 function App() {
   const[endPoint, setEndPoint] = useState([])
   const[isOneNumber, setIsOneNumber] = useState(false);
-  
+  const form = useRef();
   
 
     const fetchQuery = async (url)=>{
@@ -61,12 +61,14 @@ function App() {
             console.log('Wrong endpoint - ', endpoint.value)
             setEndPoint('')
         }
+        form.current.reset()
     }
    
     const LIComponent = ({objData}) =>{
       const propArr = [];
       // Масив стічок, які складаються з проперті та її 
       // На жаль я не знайшов свій шаблон рекурсивної функції, тому роблю вже "щоб було"
+     
       for (let prop in objData) {
         if (typeof objData[prop] !== 'object') {
             propArr.push(`${prop} : ${objData[prop]}`);
@@ -87,7 +89,7 @@ function App() {
   return (
     <div className="App">
       <h1> Неконтрольований інпут</h1>
-      <form onSubmit={handleSubmit}>
+      <form ref={form} onSubmit={handleSubmit}>
         <input type='text' name='endpoint' placeholder="input point" />
         <br />
         <br />
@@ -97,7 +99,7 @@ function App() {
         <button type='submit'> Submit</button>
       </form>
       <hr />
-        { !isOneNumber  && endPoint.map(item => <LIComponent objData = {item} /> )}
+        { (!isOneNumber && endPoint.length>0)   && endPoint.map(item => <LIComponent objData = {item} /> )}
         { isOneNumber  && <LIComponent objData = {endPoint} />}
     </div>
   );
