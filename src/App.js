@@ -4,31 +4,41 @@ import './App.css';
 const url='https://jsonplaceholder.typicode.com/'
 const points= ['posts','comments','albums','photos','users','todos'];
 
-const Displayuser = ()=>{
-const data = [...endPoint];
-return (
-  <div>
-  <h3> `User id : ${data.id}`</h3>
-  <p> `User name : ${data.name} ${data.username}`</p>
-  <p> `works in : ${data.company.name}`</p>
 
-  </div>
-
-)
+const LIComponent = ({objData}) =>{
+  const propArr = [];
+  // Масив стічок, які складаються з проперті та її 
+  // На жаль я не знайшов свій шаблон рекурсивної функції, тому роблю вже "щоб було"
+  for (let prop in objData) {
+    if (typeof objData[prop] !== 'object') {
+        propArr.push(`${prop} : ${objData[prop]}`);
+    } else {
+      let value = JSON.stringify( objData[prop]);
+      propArr.push(`${prop} : ${value}`);
+    }
+  }  
+    return (
+      <>
+          {/* Кожна пропертя у своєму діві */}
+          {propArr.map( (prop) => <div>{prop}</div> )}
+          {<hr/>}
+      </>
+   )
 }
 
 
-
 function App() {
-
   const[endPoint, setEndPoint] = useState([])
+  const[isOneNumber, setIsOneNumber] = useState(false);
+  
+  
 
     const fetchQuery = async (url)=>{
         //setIsLoading(true)
         const respose = await fetch(url)
         const data = await respose.json()
-        console.log(data)
-        setEndPoint(data)
+        //console.log(data)
+        setEndPoint(data);
     }
     const handleSubmit = (e)=>{
         e.preventDefault();
@@ -41,7 +51,8 @@ function App() {
         if( points.find(p => p === point)) {
             console.log('Match - ', endpoint.value)
             if( number > 0 && number <= 10) {
-                // console.log('Id inputed - ', pointnumber.value)
+                //console.log('Id inputed - ', pointnumber.value)
+                setIsOneNumber(true);
                 fetchQuery(url+point+'/'+number);
             }else{
                 fetchQuery(url+point);
@@ -51,7 +62,28 @@ function App() {
             setEndPoint('')
         }
     }
-
+   
+    const LIComponent = ({objData}) =>{
+      const propArr = [];
+      // Масив стічок, які складаються з проперті та її 
+      // На жаль я не знайшов свій шаблон рекурсивної функції, тому роблю вже "щоб було"
+      for (let prop in objData) {
+        if (typeof objData[prop] !== 'object') {
+            propArr.push(`${prop} : ${objData[prop]}`);
+        } else {
+          let value = JSON.stringify( objData[prop]);
+          propArr.push(`${prop} : ${value}`);
+        }
+      }  
+        return (
+          <>
+              {/* Кожна пропертя у своєму діві */}
+              {propArr.map( (prop) => <div>{prop}</div> )}
+              {<hr/>}
+          </>
+       )
+    }  
+    
   return (
     <div className="App">
       <h1> Неконтрольований інпут</h1>
@@ -64,7 +96,9 @@ function App() {
         <br />
         <button type='submit'> Submit</button>
       </form>
-      <Displayuser />
+      <hr />
+        { !isOneNumber  && endPoint.map(item => <LIComponent objData = {item} /> )}
+        { isOneNumber  && <LIComponent objData = {endPoint} />}
     </div>
   );
 }
